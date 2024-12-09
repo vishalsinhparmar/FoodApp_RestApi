@@ -1,15 +1,16 @@
 import mongoose  from "mongoose";
-const dbName = '/foodApp'
-const dbConnection =  () =>{
 
-    mongoose.connect(`/${dbName}`)
-    .then(()=>{
-        console.log("the database iss successfully connecteed")
-    })
-    .catch((err)=>{
-       console.log('teh error in the database connectionn',err.meesge)
-    })
+const dbConnection = async () =>{
+   
+    try{
+        await mongoose.connect(`${process.env.DATABASE_URL}`)
+        console.log('the database connected successfully')
+    }catch(err){
+       console.log('error occur in the connection',err)
+    }
+ 
      
 };
+// dbConnection()
 
 export default dbConnection;
