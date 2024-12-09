@@ -1,24 +1,49 @@
 import mongoose  from "mongoose";
 
+const Pricing = new mongoose.Schema({
+    size:{
+        type:String,
+        require:true
+    },
+    price:{
+        type:Number,
+        require:true
+    },
+});
+
+
+
+
 const CategorySchema = new mongoose.Schema({
-   categoryName:{
+    Categoryname:{
+        type:String,
+        required:true
+    },
+
+   categoryItemName:{
        type:String,
-       require:true,
+       required:true,
    },
 
-   categorydetail:{
+   description:{
     type:String,
-    require:true,
+    required:true,
    },
 
-   categoryfilepath:{
+   image:{
     type:String,
-    require:true,
+    required:true,
    },
 
    pricing:{
-    type:String,
-    require:true,
+    type:[Pricing],
+    required:true
+   },
+
+   subcategories:{
+     type:[mongoose.Schema.ObjectId],
+     ref:"Subcategory"
+     
    }
 
 },{timestamps:true});
