@@ -1,10 +1,10 @@
 import mongoose  from "mongoose";
 
 const SubcategorySchema = new mongoose.Schema({
-    // coverimage:{
-    //     type:String,
-    //     require:true
-    // },
+    coverimage:{
+        type:String,
+        require:true
+    },
     subCategoryname:{
         type:String,
         required:true

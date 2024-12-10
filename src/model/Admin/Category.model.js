@@ -36,15 +36,18 @@ const CategorySchema = new mongoose.Schema({
    },
 
    pricing:{
-    type:[Pricing],
-    required:true
+    type:Array,
+    default:[]
    },
 
-   subcategories:{
-     type:[mongoose.Schema.ObjectId],
+   subcategories:[
+    {
+     type:mongoose.Schema.ObjectId,
      ref:"Subcategory"
-     
-   }
+
+    },
+    
+   ]
 
 },{timestamps:true});
 
