@@ -26,12 +26,10 @@ const Cartschema = new mongoose.Schema({
         require:true,
         default:0 
     },
-    additionalInfo:[
-        {
-        type:mongoose.Types.ObjectId,
-        ref:'AdditonalInfo'
-        }
-    ]
+    additionalInfo:{
+        type:Object,
+        default:null
+    }
 
 },{timestamps:true});
 
