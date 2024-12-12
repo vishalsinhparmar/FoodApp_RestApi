@@ -3,33 +3,22 @@ import mongoose from "mongoose";
 
 const Cartschema = new mongoose.Schema({
   
-    userid:{
+    userId:{
         type:mongoose.Types.ObjectId,
         ref:"User"
     },
-    subcategoryid:{
+    subcategoryId:[{
         type:mongoose.Types.ObjectId,
         ref:'Subcaegory'
-    },
-    qty:{
-       type:Number,
-       require:true,
-       default:0
-    },
+    }],
+  
     subtotal:{
         type:Number,
         require:true,
         default:0 
     },
-    total:{
-        type:Number,
-        require:true,
-        default:0 
-    },
-    additionalInfo:{
-        type:Object,
-        default:null
-    }
+
+ 
 
 },{timestamps:true});
 

@@ -100,9 +100,32 @@ try{
 }
 }
 
+
+const subfoodCategorydata = async (req,res)=>{
+
+try{
+   
+   const subfoodCategory = await Category.find().populate('subcategories');
+   console.log('the food category is',subfoodCategory)
+
+   const subCategory = subfoodCategory.flatMap(category => category.subcategories);
+   
+   if(!subCategory || subCategory.length === 0){  
+       sendError(res,{message:"false"},400)
+   };
+
+   sendSuccess(res,subCategory,"categorydata fetched successfully",200)
+ 
+}catch(err){
+  console.log('the error occur in the addfoodCategory',err.message)
+  sendError(res,{message:'internal server error'},500)
+}
+}
+
 export {
      addfoodCategory,
      foodCategorydata,
-     addsubCategoy
+     addsubCategoy,
+     subfoodCategorydata
 
 }

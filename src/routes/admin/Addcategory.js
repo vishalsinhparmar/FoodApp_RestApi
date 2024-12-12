@@ -1,5 +1,5 @@
 import express from 'express';
-import { addfoodCategory, addsubCategoy, foodCategorydata } from '../../controller/Admin/admin.controller.js';
+import { addfoodCategory, addsubCategoy, foodCategorydata, subfoodCategorydata } from '../../controller/Admin/admin.controller.js';
 import upload from '../../config/clodinaryconfig.js';
 
 const adminRoutes = express.Router();
@@ -9,8 +9,10 @@ adminRoutes.post('/addsubCategory',upload.fields([
     {name:"coverimage",maxCount:1},
     {name:"image",maxCount:1}
 ]),addsubCategoy);
+// getting a subcategory or catef
+adminRoutes.get('/foodCategorydata/?category=category',foodCategorydata);
+adminRoutes.get('/subfoodCategorydata',subfoodCategorydata);
 
-adminRoutes.get('/foodCategorydata',foodCategorydata);
 
 
 

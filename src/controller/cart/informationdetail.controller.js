@@ -1,17 +1,23 @@
-import { sendError, sendSuccess } from "../../../utils/resHandler";
-import Cart from "../../model/Cart/cart.model"; 
+import { sendError, sendSuccess } from "../../../utils/resHandler.js";
+import AdditonalInfo from "../../model/Cart/additonalInfo.model.js";
+import Cart from "../../model/Cart/cart.model.js"; 
 
-const addCartdetail = async (req,res) => {
-      const {id} = req.params
-      const {informationdata} = req.body;
+const addCartadditionalInfo = async (req,res) => {
+      const {id} = req.params;
+      console.log('the id in addCartadditionalInfo',id);
+      const {detailinfo} = req.body;
+      console.log('the informationdata',detailinfo)
 
       try{
+            const additionalInfo = await AdditonalInfo.create({
+               detailinfo
+            });
+
+            console.log('the additionalInfo',additionalInfo);
          
-
-
             const cartdata = await Cart.findByIdAndUpdate(
                  id,
-                 {additionalInfo:informationdata},
+                 {additionalInfo:additionalInfo.detailinfo},
                  {new:true}
             );
 
@@ -21,7 +27,7 @@ const addCartdetail = async (req,res) => {
 
     
 
-            sendSuccess(res,"the cart are created a successfully",200);
+            sendSuccess(res,cartdata,200);
            
       }catch(err){
         console.log('the error occur in the addCartdetail',err.messsage)
@@ -29,4 +35,4 @@ const addCartdetail = async (req,res) => {
 };
 
 
-export default addCartdetail;
+export default addCartadditionalInfo;
