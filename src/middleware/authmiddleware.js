@@ -1,4 +1,4 @@
-import {sendError} from "../../utils/resHandler.js";
+import {sendError, sendSuccess} from "../../utils/resHandler.js";
 import jsonwebtoken from 'jsonwebtoken'
 const verifyAuthenticateUser = async (req,res,next)=>{
    const token = req.headers.authorization?.split(" ")[1];
@@ -10,8 +10,8 @@ const verifyAuthenticateUser = async (req,res,next)=>{
            jsonwebtoken.verify(token,process.env.JWT_SECRET,(err,user)=>{
             console.log('JWT_SECRET is',process.env.JWT_SECRET)
              if(err) { 
-               console.error('the error occur in this token verification',err.message)                
-              return sendError(res,"something went wrong please try again",404);  
+                              
+               res.status(404).send({message:"the user have not authenticated"}) 
              };
              req.user = user;
              console.log('the user is a',user)

@@ -1,6 +1,6 @@
 import { sendError, sendSuccess } from "../../../utils/resHandler.js";
 import AdditonalInfo from "../../model/Cart/additonalInfo.model.js";
-import Cart from "../../model/Cart/cart.model.js"; 
+import CartIteam from "../../model/Cart/cartItem.model.js";
 
 const addCartadditionalInfo = async (req,res) => {
       const {id} = req.params;
@@ -14,12 +14,14 @@ const addCartadditionalInfo = async (req,res) => {
             });
 
             console.log('the additionalInfo',additionalInfo);
-         
-            const cartdata = await Cart.findByIdAndUpdate(
+            const cartIfodata = await CartIteam.findById(id);
+            console.log('the cartIfodata',cartIfodata); 
+            const cartdata = await CartIteam.findByIdAndUpdate(
                  id,
-                 {additionalInfo:additionalInfo.detailinfo},
+                 {additionalInfo:{detailinfo:additionalInfo.detailinfo}},
                  {new:true}
             );
+            console.log('the additionalInfo',cartdata)
 
             if(!cartdata){
                 return  sendError(res,"something went wrong",400)
