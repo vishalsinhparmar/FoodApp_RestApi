@@ -7,10 +7,12 @@ const Cartschema = new mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:"User"
     },
-    subcategoryId:[{
+     
+       Iteam:[{
         type:mongoose.Types.ObjectId,
-        ref:'Subcaegory'
-    }],
+        ref:'CartIteam'
+       }
+    ],
   
     subtotal:{
         type:Number,
