@@ -20,25 +20,13 @@ const CategorySchema = new mongoose.Schema({
         required:true
     },
 
-   categoryItemName:{
-       type:String,
-       required:true,
-   },
+    categoryIteam:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'CategoryItem'
+        }
+    ],
 
-   description:{
-    type:String,
-    required:true,
-   },
-
-   image:{
-    type:String,
-    required:true,
-   },
-
-   pricing:{
-    type:Array,
-    default:[]
-   },
 
    subcategories:[
     {
