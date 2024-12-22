@@ -32,7 +32,7 @@ try{
     console.log("the pushing item is",updateCategory)
 
    if(!subcategories){
-       sendError(res,{message:"false"},400)
+       return sendError(res,{message:"false"},400)
    };
 
    sendSuccess(res,subcategories,"subcategorydata created successfully",201)
@@ -58,7 +58,7 @@ try{
 //    const subCategory = subfoodCategory.flatMap(category => category.subcategories);
    
    if(!subfoodCategory || subfoodCategory.length === 0){  
-       sendError(res,{message:"false"},400)
+      return  sendError(res,{message:"false"},400)
    };
 
    sendSuccess(res,subfoodCategory,"subcategorydata fetched successfully",200)
@@ -74,7 +74,7 @@ const subCategorydelete = async (req,res)=>{
     console.log('subcategoryId',category);
 
     if(!category){
-      sendError(res,"subcategory not seen",404)
+      return sendError(res,"subcategory not seen",404)
     }
 
     try{
@@ -92,8 +92,48 @@ const subCategorydelete = async (req,res)=>{
     }
 }
 
+const updatesubCategorybyId = async (req,res)=>{
+     
+  const {id} = req.params;
+   const {subCategoryname} = req.body;
+
+   if(!id && !subCategoryname){
+    return sendError(res,"updata subcategory is not valid credentials",401)
+   }
+
+   const categoryfile = req.files.image[0].path;
+   const coverimagefile = req.files.coverimage[0]?.path;
+
+   if(!categoryfile || !coverimagefile){
+    return sendError(res,"image are not valid file",404)
+   }
+
+   try{
+      const updatesubCategory = await Subcategory.findByIdAndUpdate(id,{
+        coverimage:categoryfile,
+        image:coverimagefile,
+        subCategoryname,
+      },
+      {new:true}
+    );
+
+    console.log('updatesubCategory',updatesubCategory);
+
+    if(!updatesubCategory){
+     return sendError(res,"updatesubCategory is not valid credentials",401)
+    };
+    
+    sendSuccess(res,"subCategory updated successfully",201);
+
+   }catch(err){
+    console.log('error occur in updateCategorybyId',err.message)
+   }
+
+}
+
 export {
     addsubCategoy,
     subfoodCategorydata,
-    subCategorydelete
+    subCategorydelete,
+    updatesubCategorybyId
 }

@@ -43,6 +43,24 @@ try{
   sendError(res,{message:'internal server error'},500)
 }
 }
+const categorydata = async (req,res)=>{
+
+  try{
+     
+     const foodCategory = await Category.find();
+     console.log('the food category is',foodCategory)
+  
+     if(!foodCategory){  
+         sendError(res,{message:"false"},400)
+     };
+  
+     sendSuccess(res,foodCategory,"categorydata fetched successfully",200)
+   
+  }catch(err){
+    console.log('the error occur in the addfoodCategoryItem',err.message)
+    sendError(res,{message:'internal server error'},500)
+  }
+  }
 
 const foodCategoryitemDelete = async (req,res)=>{
     const {category} = req.params;
@@ -67,9 +85,39 @@ const foodCategoryitemDelete = async (req,res)=>{
     }
 }
 
+const updateCategorybyId = async (req,res)=>{
+   const {id} = req.params;
+   console.log('id is',id);
+   const {category} = req.body;
+   console.log('res.body',req.body)
+   if(!id && !category){
+    return sendError(res,"updata category id is not valid",401)
+   }
+   try{
+      const updateCategory = await Category.findByIdAndUpdate(id,{
+        Categoryname:category
+      },
+      {new:true}
+    );
+
+    console.log('updateCategory',updateCategory);
+
+    if(!updateCategory){
+     return sendError(res,"updateCategory is not valid credentials",401)
+    };
+    
+    sendSuccess(res,"category updated successfully",201);
+
+   }catch(err){
+    console.log('error occur in updateCategorybyId',err.message)
+   }
+}
+
 
 export {
+    categorydata,
     foodCategory,
     foodcategorydatashow,
-    foodCategoryitemDelete
+    foodCategoryitemDelete,
+    updateCategorybyId
 }
