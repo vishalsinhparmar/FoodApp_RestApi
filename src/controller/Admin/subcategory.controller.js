@@ -130,10 +130,30 @@ const updatesubCategorybyId = async (req,res)=>{
    }
 
 }
+ 
+const subfoodCategorybyId = async(req,res)=>{
+   const {id} = req.params;
+   if(!id ){
+    return sendError(res,"subcategory is not valid credentials",401)
+   }
+
+   try{
+   const subcategorydataByid = await Subcategory.findById(id);
+   if(!subcategorydataByid){
+    return sendError(res,"invalid request credential are not metched",402)
+   }
+   console.log('subcategorybyId',subcategorydataByid)
+   sendSuccess(res,subcategorydataByid,"subcategory are fetched by item successfully",200)
+   }catch(err){
+    console.log('error occur in the subcategorybyId',err.message)
+   }
+
+}
 
 export {
     addsubCategoy,
     subfoodCategorydata,
     subCategorydelete,
-    updatesubCategorybyId
+    updatesubCategorybyId,
+    subfoodCategorybyId
 }

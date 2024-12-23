@@ -3,7 +3,7 @@ import express from 'express';
 import upload from '../../config/clodinaryconfig.js';
 import { categorydata, foodCategory, foodcategorydatashow, foodCategoryitemDelete, updateCategorybyId } from '../../controller/Admin/foodcategory.controller.js';
 import { addfoodCategoryItem, foodCategorydelete, foodCategoryItemdata, updateCategoryitembyId } from '../../controller/Admin/categoryItem.controller.js';
-import { addsubCategoy, subCategorydelete, subfoodCategorydata, updatesubCategorybyId } from '../../controller/Admin/subcategory.controller.js';
+import { addsubCategoy, subCategorydelete, subfoodCategorybyId, subfoodCategorydata, updatesubCategorybyId } from '../../controller/Admin/subcategory.controller.js';
 
 const adminRoutes = express.Router();
 
@@ -20,6 +20,9 @@ adminRoutes.get(`/categorydata`,categorydata);
 adminRoutes.get(`/foodcategorydatashow`,foodcategorydatashow);
 adminRoutes.get(`/foodCategoryItemdata/:category`,foodCategoryItemdata);
 adminRoutes.get('/subfoodCategorydata/:category',subfoodCategorydata);
+
+adminRoutes.get('/subCategorybyId/:id',subfoodCategorybyId);
+
 
 // delete caegory
 adminRoutes.delete('/foodCategoryDeletebyId/:category',foodCategorydelete);
