@@ -2,7 +2,8 @@ import Category from "../../model/Admin/Category.model.js";
 import { sendError, sendSuccess } from "../../../utils/resHandler.js";
 import CategoryItem from "../../model/Admin/categoryItem.model.js";
 
-const foodCategory = async (req,res) =>{
+// add food categoy using a req.body
+const AddfoodCategory = async (req,res) =>{
           
     const { category } = req.body
       console.log('the category is',req.body)
@@ -43,10 +44,11 @@ try{
   sendError(res,{message:'internal server error'},500)
 }
 }
+
+// fetch all the category data are found
 const categorydata = async (req,res)=>{
 
-  try{
-     
+  try{    
      const foodCategory = await Category.find();
      console.log('the food category is',foodCategory)
   
@@ -62,6 +64,7 @@ const categorydata = async (req,res)=>{
   }
   }
 
+// category delete by the perticular id of the category
 const foodCategoryitemDelete = async (req,res)=>{
     const {category} = req.params;
     console.log('foodcategoryitemId',category);
@@ -85,6 +88,7 @@ const foodCategoryitemDelete = async (req,res)=>{
     }
 }
 
+// update categorybyId have by the id of the category with patch data
 const updateCategorybyId = async (req,res)=>{
    const {id} = req.params;
    console.log('id is',id);
@@ -112,12 +116,32 @@ const updateCategorybyId = async (req,res)=>{
     console.log('error occur in updateCategorybyId',err.message)
    }
 }
+// category data are fectched individual id
+const categorybyId = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return sendError(res, "subcategory is not valid credentials", 401)
+  }
+
+  try {
+    const categoryByid = await Category.findById(id);
+    if (!categoryByid) {
+      return sendError(res, "invalid request credential are not metched", 402)
+    }
+    console.log('categoryByid', categoryByid)
+    sendSuccess(res, categoryByid, "categoryByid are fetched by item successfully", 200)
+  } catch (err) {
+    console.log('error occur in the categoryByid', err.message)
+  }
+
+}
 
 
 export {
     categorydata,
-    foodCategory,
+    AddfoodCategory,
     foodcategorydatashow,
     foodCategoryitemDelete,
-    updateCategorybyId
+    updateCategorybyId,
+    categorybyId
 }

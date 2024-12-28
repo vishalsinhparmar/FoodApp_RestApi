@@ -14,7 +14,7 @@ const addsubCategoy = async (req, res) => {
     const coverimagefile = req.files.coverimage[0]?.path;
 
     const subcategories = await Subcategory.create({
-      coverimage: categoryfile,
+      coverimage: categoryfile || "",
       image: coverimagefile,
       subCategoryname,
     })
@@ -104,10 +104,6 @@ const updatesubCategorybyId = async (req, res) => {
     return sendError(res, "updata subcategory is not valid credentials", 401)
   }
 
-
-
-
-
   try {
     const subcategory = await Subcategory.findById(id);
 
@@ -117,7 +113,6 @@ const updatesubCategorybyId = async (req, res) => {
     console.log("req.files", req.files)
     const categoryfile = req.files?.image?.[0]?.path || subcategory.image;
     const coverimagefile = req.files?.coverimage?.[0]?.path || subcategory.coverimage;
-
 
     const updateField = {
       coverimage: categoryfile,
@@ -137,11 +132,6 @@ const updatesubCategorybyId = async (req, res) => {
 
     console.log('updatesubCategory', updatesubCategory);
 
-    if (!updatesubCategory) {
-      return sendError(res, "updatesubCategory is not valid credentials", 401)
-    };
-
-    console.log('updatesubCategory', updatesubCategory);
     sendSuccess(res, updatesubCategory, "subCategory updated successfully", 201);
 
   } catch (err) {

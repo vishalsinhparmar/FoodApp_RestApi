@@ -96,25 +96,30 @@ const updateCategoryitembyId = async (req,res) => {
   const { categoryItemName,description,pricing} = req.body;
   console.log('req.body for the categoryItem',req.body);
 
-  if (!id && !categoryItemName && !description && !pricing) {
-    return sendError(res, "updata categoryIteam id is not valid", 401)
-  }
-
-  const categoryfilepath = req.file.path; 
-  console.log(categoryfilepath)
-  if(!categoryfilepath){
-     sendError(res,"categoryItem file path are not found",401)
-  }
-
   try {
+    if (!id && !categoryItemName && !description && !pricing) {
+      return sendError(res, "updata data credentials are not provided", 401)
+    }
+    
+    
+    const categoryItembyid = await CategoryItem.findById(id);
+   
+     if(!categoryItembyid){
+        return sendError(res,"categoryitem are not found",404)
+     }
+    const imageFile =   req.file?.path || categoryItembyid.image 
 
-    const updateCategoryItem = await CategoryItem.findByIdAndUpdate(id, {
+    const updateField = {
       categoryItemName,
       description,
-      image:categoryfilepath,
+      image:imageFile,
       pricing:JSON.parse(pricing)
+    }
 
-    },
+
+    const updateCategoryItem = await CategoryItem.findByIdAndUpdate(
+        id,
+        updateField,
       { new: true }
     );
 
@@ -131,9 +136,29 @@ const updateCategoryitembyId = async (req,res) => {
   }
 }
 
+const foodCategoryitembyId = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return sendError(res, "subcategory is not valid credentials", 401)
+  }
+
+  try {
+    const categoryItemdataByid = await CategoryItem.findById(id);
+    if (!categoryItemdataByid) {
+      return sendError(res, "invalid request credential are not metched", 402)
+    }
+    console.log('categoryItemdataByid', categoryItemdataByid)
+    sendSuccess(res, categoryItemdataByid, "subcategory are fetched by item successfully", 200)
+  } catch (err) {
+    console.log('error occur in the subcategorybyId', err.message)
+  }
+
+}
+
 export {
   addfoodCategoryItem,
   foodCategoryItemdata,
   foodCategorydelete,
-  updateCategoryitembyId
+  updateCategoryitembyId,
+  foodCategoryitembyId
 }
