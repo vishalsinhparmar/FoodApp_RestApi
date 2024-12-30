@@ -32,7 +32,7 @@ const addCardItem = async (req,res)=>{
           deliveryFee:50
         });
         console.log('the cart is',cart)
-        return  sendSuccess(res,"the cart is created successfully",201)
+        return  sendSuccess(res,cart,"the cart is created successfully",201)
       } 
 
        const existingCartIteam = cartdata.Iteam.find(item => item.subcategoryId.toString() === subcategoryId);
@@ -73,7 +73,7 @@ const showallCartdata = async (req,res) => {
 
     try{
            const userid = req.user.sub
-           const cartDataforuser = await Cart.find({userId:userid}).populate({
+           const cartDataforuser = await Cart.findOne({userId:userid}).populate({
               path:'Iteam',
               populate:{
                 path:'subcategoryId',
@@ -81,6 +81,7 @@ const showallCartdata = async (req,res) => {
               }
            })
          
+          //  const setcart = cartDataforuser.flat()
            console.log('the cartDataforuser',cartDataforuser)
 
            if (!cartDataforuser|| cartDataforuser.length === 0) {

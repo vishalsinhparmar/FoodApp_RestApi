@@ -75,6 +75,9 @@ const UserSigUp = async (req, res) => {
     const hashPassword = await bcryptjs.hash(password, 10);
     console.log('the hashPassword is a', hashPassword);
     const filepath = req.file.path;
+    if(!filepath){
+       return sendError(res,{image:"image is not valid form"},404)
+    }
     console.log("the filepath is a", filepath)
     const newUser = await User.create({
       filepath: filepath,

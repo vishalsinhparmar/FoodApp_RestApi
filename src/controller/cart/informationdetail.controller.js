@@ -1,5 +1,4 @@
 import { sendError, sendSuccess } from "../../../utils/resHandler.js";
-import AdditonalInfo from "../../model/Cart/additonalInfo.model.js";
 import CartIteam from "../../model/Cart/cartItem.model.js";
 
 const addCartadditionalInfo = async (req,res) => {
@@ -9,22 +8,21 @@ const addCartadditionalInfo = async (req,res) => {
       console.log('the informationdata',detailinfo)
 
       try{
-            const additionalInfo = await AdditonalInfo.create({
-               detailinfo
-            });
-
-            console.log('the additionalInfo',additionalInfo);
-            const cartIfodata = await CartIteam.findById(id);
-            console.log('the cartIfodata',cartIfodata); 
+          
+            const cartItem = await CartIteam.findById(id);
+            if(!cartItem){
+                return sendError(res,"Cart item is not found",404)
+            }
+           
             const cartdata = await CartIteam.findByIdAndUpdate(
                  id,
-                 {additionalInfo:{detailinfo:additionalInfo.detailinfo}},
+                 {additionalInfo:{detailinfo}},
                  {new:true}
             );
             console.log('the additionalInfo',cartdata)
 
             if(!cartdata){
-                return  sendError(res,"something went wrong",400)
+                return  sendError(res,"Faild update a cart Item",400)
             };
 
     

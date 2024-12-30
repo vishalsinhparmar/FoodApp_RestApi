@@ -3,11 +3,13 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     filepath:{
         type:String,
-       require:true
+        require:true
     },
     username:{
+
         type:String,
         require:true,
+        
     },
     email:{
         type:String,
