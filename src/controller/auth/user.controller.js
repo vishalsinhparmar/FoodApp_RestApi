@@ -51,7 +51,7 @@ const UserSigIn = async (req, res) => {
 }
 const getUser = async (req, res) => {
   try {
-    const userData = await User.findOne({ _id: req.user.sub });
+    const userData = await User.findOne({ _id:req.user.sub });
     console.log("the userData is", userData);
     if (!userData) {
       return sendError(res, "User not found", 401);

@@ -157,8 +157,11 @@ const razorpayOrderid = async (req,res)=>{
 }
 
 const checkOut = async (req,res)=>{
-   const {address,paymentDetail} = req.body;
-   console.log('the req.body is',req.body);
+   const paymentDetail = req.body;
+   console.log("paymentDetail",paymentDetail)
+   if(!req.body){
+      return sendError(res,"not provide valid detail",404)
+   }
 
    try{
        
@@ -170,7 +173,7 @@ const checkOut = async (req,res)=>{
 
         const deliveryFee = 50;
         const grandTotal = cart.subtotal + deliveryFee;  
-        
+               
         const {razorpay_order_id,razorpay_payment_id,razorpay_signature} = paymentDetail;
         console.log('razorpay_signature',razorpay_signature);
         const generatedSignature = crypto.
@@ -187,7 +190,7 @@ const checkOut = async (req,res)=>{
            userId:req.user.sub,
            items:cart.Iteam.map(item => item._id),
            grandTotal:grandTotal,
-           deliveryAddress:address,
+           deliveryAddress:null,
            paymentStatus:'success'
         })
 
@@ -207,7 +210,7 @@ const userOrder =  async (req,res) => {
 
          if(!userOrder) return sendError(res,'the user have not any order',404)
 
-        sendSuccess(res,userOrder,201);
+        sendSuccess(res,userOrder,200);
 
         
      }catch(err){
