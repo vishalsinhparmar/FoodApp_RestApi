@@ -5,6 +5,7 @@ import CartIteam from "../../model/Cart/cartItem.model.js";
 import razorpay from "../../../utils/razorpay.js";
 import Order from '../../model/Cart/order.model.js';
 import mongoose from 'mongoose';
+import Address from '../../model/Cart/address.model.js';
 
 const addCardItem = async (req,res)=>{
     const {subcategoryId,qty,total} = req.body;
@@ -218,6 +219,91 @@ const userOrder =  async (req,res) => {
      }
 }
 
+const AddressDetail = async(req,res)=>{
+  const {address} = req.body;
+  
+   try{
+    if(!address){
+       return sendError(res,"please provide a address first",404)
+    }
+
+    const userId = req.user.sub;
+    if(!userId){
+      return sendError(res,"user is not authenticate")
+    }
+
+    const addressDetail = await Address.create({
+      address,
+      userId
+    })
+    
+    console.log("addressDetail are showing",addressDetail);
+
+    if(!addressDetail){
+       return sendError(res,"something went wrong with address",404)
+    }
+
+    sendSuccess(res,addressDetail,"address detail",201)
+
+   }catch(err){
+    console.log("error occur in the AddressDetail",err.message)
+   }
+}
+
+const showAddress = async(req,res)=>{
+  
+   try{
+    const userId = req.user.sub;
+    if(!userId){
+      return sendError(res,"user is not authenticate")
+    }
+    const addresList = await Address.find({userId:userId}) 
+
+     if(!addresList){
+       return sendError(res,"user have not find any address",404)
+     };
+
+    sendSuccess(res,addresList,"address detail",201)
+
+   }catch(err){
+    console.log("error occur in the AddressDetail",err.message)
+   }
+}
+
+const selectedAddress = async (req,res)=>{
+  const {addressId} = req.body 
+  console.log('addressId is',addressId)
+  try{
+      
+    const userId = req.user.sub;
+    if(!userId){
+      return sendError(res,"user is not authenticate")
+    }
+      
+     if(!addressId){
+      return sendError(res,"user have not selected any address",404)
+    };
+      
+    await Address.updateMany({userId},{$set:{isSelected:false}});
+
+     
+     const updateAddress = await Address.findByIdAndUpdate(addressId,{$set:{isSelected:true}})
+     console.log('updateAddress',updateAddress);
+
+     const cart = await Cart.findOneAndUpdate(
+       {userId},
+      {address:addressId},
+      {new:true}
+     );
+
+     console.log("updated cart with new address",cart);
+
+     sendSuccess(res,cart,"successfully address are added",201)
+  }catch(err){
+    console.log("error occur in the selectedAddress",err.message)
+  }
+}
+
 export {
     
     showallCartdata,
@@ -225,6 +311,9 @@ export {
     addCardItem,
     razorpayOrderid,
     checkOut,
-    userOrder
+    userOrder,
+    AddressDetail,
+    showAddress,
+    selectedAddress
 };
 

@@ -1,6 +1,6 @@
 import express from 'express';
 import verifyAuthenticateUser from '../../middleware/authmiddleware.js';
-import { addCardItem, cartCategorydelete, checkOut, razorpayOrderid, showallCartdata, userOrder } from '../../controller/cart/cart.controller.js';
+import { addCardItem, AddressDetail, cartCategorydelete, checkOut, razorpayOrderid, selectedAddress, showAddress, showallCartdata, userOrder } from '../../controller/cart/cart.controller.js';
 import addCartadditionalInfo from '../../controller/cart/informationdetail.controller.js';
 
 
@@ -14,6 +14,11 @@ adminRoutes.delete('/deleteCartcategory/:deleteId',verifyAuthenticateUser,cartCa
 adminRoutes.post('/create_order',verifyAuthenticateUser,razorpayOrderid);
 adminRoutes.post('/verify_order',verifyAuthenticateUser,checkOut);
 adminRoutes.get('/userOreder',verifyAuthenticateUser,userOrder);
+
+// address
+adminRoutes.post('/addAddress',verifyAuthenticateUser,AddressDetail);
+adminRoutes.get('/showAddress',verifyAuthenticateUser,showAddress);
+adminRoutes.post('/selectAddress',verifyAuthenticateUser,selectedAddress);
 
 
 

@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 const Cartschema = new mongoose.Schema({
@@ -33,8 +32,11 @@ const Cartschema = new mongoose.Schema({
         type:Number,
         require:true,
         default:0
+    },
+    address:{
+       type:mongoose.Schema.Types.ObjectId,
+       ref:"Address"
     }
-
  
 
 },{timestamps:true});
