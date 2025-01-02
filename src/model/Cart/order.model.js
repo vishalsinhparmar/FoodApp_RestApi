@@ -6,29 +6,12 @@ const Orderschema = new mongoose.Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
          },
-         items:[
-           
-            {
-                type:mongoose.Schema.Types.ObjectId,
-                ref:'CartIteam'
-            }
-
-            //  {
-            //    subcategoryId:{
-            //     type:mongoose.Schema.Types.ObjectId,
-            //     ref:"subcategory"
-            //    },
-            //    qty:{
-            //     type:String,
-            //     require:true
-            //    },
-            //    total:{
-            //     type:String,
-            //     require:true
-            //    }
-            //  }
-            
-         ],
+         cartItem:{
+             type:mongoose.Schema.Types.ObjectId,
+             ref:"Cart"
+         },
+      
+       
          grandTotal:{
             type:Number,
             require:true

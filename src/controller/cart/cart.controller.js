@@ -166,7 +166,7 @@ const checkOut = async (req,res)=>{
 
    try{
        
-      const cart = await Cart.findOne({userId:req.user.sub}).populate('Iteam');
+      const cart = await Cart.findOne({userId:req.user.sub}).populate("Iteam");
       
       console.log('the cart is',cart);
 
@@ -189,7 +189,7 @@ const checkOut = async (req,res)=>{
    
         const ordercreate = await Order.create({
            userId:req.user.sub,
-           items:cart.Iteam.map(item => item._id),
+           cartItem:cart._id,
            grandTotal:grandTotal,
            deliveryAddress:null,
            paymentStatus:'success'
@@ -207,8 +207,13 @@ const checkOut = async (req,res)=>{
 const userOrder =  async (req,res) => {
      try{
          
-         const userOrder = await Order.findOne({userId:req.user.sub}).populate('items');
-
+         const userOrder = await Order.find({userId:req.user.sub}).populate('cartItem').populate({
+          path:'Iteam',
+          populate:{
+            path:'subcategoryId',
+            select:'subCategoryname image'
+          }
+       })
          if(!userOrder) return sendError(res,'the user have not any order',404)
 
         sendSuccess(res,userOrder,200);
