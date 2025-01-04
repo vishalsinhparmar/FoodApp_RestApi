@@ -50,6 +50,8 @@ const UserSigIn = async (req, res) => {
   }
 }
 const getUser = async (req, res) => {
+   const userId = req.user.sub;
+   console.log('userId',userId)
   try {
     const userData = await User.findOne({ _id:req.user.sub });
     console.log("the userData is", userData);
@@ -89,7 +91,7 @@ const UserSigUp = async (req, res) => {
     })
     const verifyToken = jsonwebtoken.sign({ id: newUser._id }, process.env.JWT_SECRET);
     console.log('the signUp have the verifyToken', verifyToken)
-    const verifyEmailLink = `http://localhost:5173/verifyemail/${verifyToken}`;
+    const verifyEmailLink = `http://localhost:5173/auth/verifyemail/${verifyToken}`;
     console.log('the verify email link is', verifyEmailLink)
     await sendMailUtils(email, "verify your email", `click this email to verify your email:${verifyEmailLink}`)
     console.log('the newUser', newUser)
@@ -142,7 +144,7 @@ const forgottenPassword = async (req, res) => {
     await emailuser.save();
     console.log('with token have the hashing is', emailuser.resetToken);
 
-    const resetPasslink = `http://localhost:5173/NewPassword/${resetToken}`;
+    const resetPasslink = `http://localhost:5173/auth/NewPassword/${resetToken}`;
     //  this is for verification that the user is verified or not after you can interegate a third api
 
     await sendMailUtils(email, 'password reset', `click to verify password:${resetPasslink}`);
@@ -159,10 +161,11 @@ const resetPassword = async (req, res) => {
     const hashedtoken = crypto.createHash('sha256').update(token).digest('hex');
     console.log('the hashedtoken for the reset password', hashedtoken)
     const user = await User.findOne({
-      resetToken: hashedtoken
+      resetToken:hashedtoken
     });
+     console.log("user is",user);
 
-    if (!user) {
+    if(!user) {
       return sendError(res,"invalid credential ! something went wrong",404)
     }
 
@@ -170,9 +173,9 @@ const resetPassword = async (req, res) => {
     user.resetToken = null;
     await user.save();
 
-    sendError(res,"password reset successfully",201)
+    sendSuccess(res,"password reset successfully",201)
   } catch (err) {
-    return res.status(404).send({ message: 'the user is unotherized', err: err.message })
+    return sendError(res,err.meessage,"error occur in this",404)
   }
 }
 export {
