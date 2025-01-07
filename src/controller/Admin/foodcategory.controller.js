@@ -34,7 +34,7 @@ try{
    console.log('the food categoryItem is',foodCategory)
 
    if(!foodCategory){  
-       sendError(res,{message:"false"},400)
+      return sendError(res,{message:"false"},400)
    };
 
    sendSuccess(res,foodCategory,"foocategoryItemdata fetched successfully",200)
@@ -49,11 +49,11 @@ try{
 const categorydata = async (req,res)=>{
 
   try{    
-     const foodCategory = await Category.find();
+     const foodCategory = await Category.find().populate("categoryIteam");
      console.log('the food category is',foodCategory)
   
      if(!foodCategory){  
-         sendError(res,{message:"false"},400)
+        return sendError(res,{message:"false"},400)
      };
   
      sendSuccess(res,foodCategory,"categorydata fetched successfully",200)
@@ -70,7 +70,7 @@ const foodCategoryitemDelete = async (req,res)=>{
     console.log('foodcategoryitemId',category);
 
     if(!category){
-      sendError(res,"foodcategoryItem not seen",404)
+     return sendError(res,"foodcategoryItem not seen",404)
     }
 
     try{
