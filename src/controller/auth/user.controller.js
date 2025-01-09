@@ -50,7 +50,7 @@ const UserSigIn = async (req, res) => {
   }
 }
 const getUser = async (req, res) => {
-   const userId = req.user.sub;
+   const userId = req.params
    console.log('userId',userId)
   try {
     const userData = await User.findOne({ _id:req.user.sub });

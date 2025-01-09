@@ -10,8 +10,19 @@ import adminauthRoutes from './src/routes/auth/admin.js';
 // import dbConnection from './src/db';
 const app = express();
 dotenv.config({path:'./.env'});
-
-app.use(cors());
+const corsOptions = {
+     origin: [
+       "food-delivery-mern-project-ymuw.vercel.app", // Replace with your frontend's production URL
+       "http://localhost:5173" // Optional: Allow localhost during development
+     ],
+     methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed HTTP methods
+     allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
+     credentials: true, // Allow credentials like cookies or authorization headers
+   };
+   
+   app.use(cors(corsOptions));
+   
+app.use(cors(corsOptions));
 app.use(urlencoded());
 app.use(express.json());
 app.use('/api/admin',adminRoutes);

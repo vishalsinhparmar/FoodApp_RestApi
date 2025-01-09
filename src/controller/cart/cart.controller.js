@@ -106,19 +106,7 @@ const showallCartdata = async (req,res) => {
       console.log('the error occur in the cartdataforUser',err.message)
     }
 };
-const getArchivedCarts = async (req, res) => {
-  try {
-     const archivedCarts = await Cart.find({ userId: req.user.sub, isArchived: true }).populate("Iteam");
-     if (!archivedCarts || archivedCarts.length === 0) {
-        return sendError(res, "No archived carts found", 404);
-     }
 
-     sendSuccess(res, archivedCarts, 200);
-  } catch (err) {
-     console.error("Error in getArchivedCarts:", err.message);
-     sendError(res, "Something went wrong", 500);
-  }
-};
 
 const cartCategorydelete = async (req,res)=>{
         const {deleteId} = req.params;
@@ -357,6 +345,6 @@ export {
     AddressDetail,
     showAddress,
     selectedAddress,
-    getArchivedCarts
+   
 };
 
