@@ -36,7 +36,12 @@ const Cartschema = new mongoose.Schema({
     address:{
        type:mongoose.Schema.Types.ObjectId,
        ref:"Address"
-    }
+    },
+    isArchived:{
+        type:Boolean,
+        default:false,
+        require:true
+    },
  
 
 },{timestamps:true});

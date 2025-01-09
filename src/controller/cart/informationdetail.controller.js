@@ -10,6 +10,7 @@ const addCartadditionalInfo = async (req,res) => {
       try{
           
             const cartItem = await CartIteam.findById(id);
+            console.log("cartItem",cartItem)
             if(!cartItem){
                 return sendError(res,"Cart item is not found",404)
             }

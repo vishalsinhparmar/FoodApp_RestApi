@@ -14,7 +14,7 @@ const addCardItem = async (req,res)=>{
       try{
          
          
-        const cartdata = await Cart.findOne({userId}).populate('Iteam');
+        const cartdata = await Cart.findOne({userId, isArchived:false}).populate('Iteam');
         
         console.log('the cart is',cartdata)
        if(!cartdata){
@@ -30,7 +30,8 @@ const addCardItem = async (req,res)=>{
           userId,
           Iteam:[cartItemcreate._id],
           subtotal:cartItemcreate.total,
-          deliveryFee:50
+          deliveryFee:50,
+          isArchived:false
         });
         console.log('the cart is',cart)
         return  sendSuccess(res,cart,"the cart is created successfully",201)
@@ -74,8 +75,11 @@ const showallCartdata = async (req,res) => {
 
     try{
            const userid = req.user.sub
-           const cartDataforuser = await Cart.findOne({userId:userid}).populate({
-              path:'Iteam',
+           if(!userid){
+             return sendError(res,{user:"user have unotherized ! signin first"},404)
+           }
+           const cartDataforuser = await Cart.findOne({userId:userid, isArchived:false}).populate({
+              path:'Iteam',                                              
               populate:{
                 path:'subcategoryId',
                 select:'subCategoryname image'
@@ -84,6 +88,9 @@ const showallCartdata = async (req,res) => {
          
           //  const setcart = cartDataforuser.flat()
            console.log('the cartDataforuser',cartDataforuser)
+           if(!cartDataforuser){
+               return sendError(res,{user:"user unotherized"},404)
+           }
 
            if (!cartDataforuser|| cartDataforuser.length === 0) {
             return sendError(res, "No cart data found for this user", 404);
@@ -99,6 +106,19 @@ const showallCartdata = async (req,res) => {
       console.log('the error occur in the cartdataforUser',err.message)
     }
 };
+const getArchivedCarts = async (req, res) => {
+  try {
+     const archivedCarts = await Cart.find({ userId: req.user.sub, isArchived: true }).populate("Iteam");
+     if (!archivedCarts || archivedCarts.length === 0) {
+        return sendError(res, "No archived carts found", 404);
+     }
+
+     sendSuccess(res, archivedCarts, 200);
+  } catch (err) {
+     console.error("Error in getArchivedCarts:", err.message);
+     sendError(res, "Something went wrong", 500);
+  }
+};
 
 const cartCategorydelete = async (req,res)=>{
         const {deleteId} = req.params;
@@ -106,7 +126,7 @@ const cartCategorydelete = async (req,res)=>{
 
         if(!mongoose.Types.ObjectId.isValid(deleteId)) return sendError(res,'invalid item id',400)
         try{
-            const cart = await Cart.findOne({userId:req.user.sub}).populate('Iteam');
+            const cart = await Cart.findOne({userId:req.user.sub,isArchived:false}).populate('Iteam');
             console.log("this is cart for the deletd item",cart)
             if(!cart){
               return sendError(res,"cart is not found",404)
@@ -123,7 +143,7 @@ const cartCategorydelete = async (req,res)=>{
             console.log('fillter value is',fillterval)
             cart.Iteam = fillterval
             cart.subtotal -= iteamtoDelete.total
-            cart.save();
+            await cart.save();
             // console.log('the deleteData is',deleteData);
             
             
@@ -166,14 +186,14 @@ const checkOut = async (req,res)=>{
 
    try{
        
-      const cart = await Cart.findOne({userId:req.user.sub}).populate("Iteam");
+      const cart = await Cart.findOne({userId:req.user.sub, isArchived:false}).populate("Iteam");
       
       console.log('the cart is',cart);
 
       if(!cart || cart.Iteam.length === 0) return sendError(res,"Cart is empty",404)
 
         const deliveryFee = 50;
-        const grandTotal = cart.subtotal + deliveryFee;  
+        // const grandTotal = cart.subtotal + deliveryFee;  
                
         const {razorpay_order_id,razorpay_payment_id,razorpay_signature} = paymentDetail;
         console.log('razorpay_signature',razorpay_signature);
@@ -186,14 +206,25 @@ const checkOut = async (req,res)=>{
         if(generatedSignature !== razorpay_signature){
            return sendError(res,"payment are not successfully happen ")
         }
-   
+
+        const addresList = await Address.find({userId:req.user.sub}) 
+         console.log()
+        if(!addresList){
+          return sendError(res,"user have not find any address",404)
+        };
+        const address = addresList.filter(add => add.isSelected === true);
+        console.log("address",address);
         const ordercreate = await Order.create({
            userId:req.user.sub,
            cartItem:cart._id,
-           grandTotal:cart.cartItem.grandtotal,
-           deliveryAddress:null,
+           grandTotal:cart.grandtotal,
+           deliveryAddress:address[0].address,
            paymentStatus:'success'
-        })
+        });
+
+        const deleteCart = await Cart.updateOne({_id:cart._id},{isArchived:true});
+         
+        console.log('deleteCart',deleteCart)
 
         console.log('the order is create',ordercreate)
         
@@ -272,6 +303,8 @@ const showAddress = async(req,res)=>{
        return sendError(res,"user have not find any address",404)
      };
 
+     console.log("addresList",addresList);
+
     sendSuccess(res,addresList,"address detail",201)
 
    }catch(err){
@@ -323,6 +356,7 @@ export {
     userOrder,
     AddressDetail,
     showAddress,
-    selectedAddress
+    selectedAddress,
+    getArchivedCarts
 };
 
