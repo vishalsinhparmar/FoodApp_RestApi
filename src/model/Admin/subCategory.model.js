@@ -3,7 +3,7 @@ import mongoose  from "mongoose";
 const SubcategorySchema = new mongoose.Schema({
     coverimage:{
         type:String,
-        require:true
+        
     },
     subCategoryname:{
         type:String,
@@ -11,7 +11,7 @@ const SubcategorySchema = new mongoose.Schema({
     },
     image:{
         type:String,
-        required:true
+        require:true
     },
     count:{
         type:Number,

@@ -10,12 +10,14 @@ const addsubCategoy = async (req, res) => {
   // if(!req.file.path) return sendError(res,{message:"false"},400)
 
   try {
-    const categoryfile = req.files.image[0]?.path;
-    const coverimagefile = req.files.coverimage[0]?.path;
+    const categoryfile = req.files?.image?.[0]?.path ;
+    console.log("categoryfile path",categoryfile);
+    const coverimagefile = req.files?.coverimage?.[0]?.path || null;
+    console.log('coverimagefile',coverimagefile);
 
     const subcategories = await Subcategory.create({
-      coverimage: categoryfile || "",
-      image: coverimagefile,
+      coverimage:coverimagefile ,
+      image:categoryfile,
       subCategoryname,
     })
 

@@ -108,7 +108,7 @@ const updateCategoryitembyId = async (req,res) => {
         return sendError(res,"categoryitem are not found",404)
      }
     const imageFile =   req.file?.path || categoryItembyid.image 
-
+    console.log("imagefile",imageFile);
     const updateField = {
       categoryItemName,
       description,

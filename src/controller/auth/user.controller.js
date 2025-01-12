@@ -85,15 +85,17 @@ const UserSigUp = async (req, res) => {
     }
     const hashPassword = await bcryptjs.hash(password, 10);
     console.log('the hashPassword is a', hashPassword);
-    const filepath = req.file.path;
-    if(!filepath){
-       return sendError(res,{image:"image is not valid form"},404)
+    
+    const filepath = req.file?.path || null;
+    if (filepath) {
+      console.log("File path provided:", filepath);
+    } else {
+      console.log("No file path provided, proceeding without an image.");
     }
     console.log("the filepath is a", filepath)
     const newUser = await User.create({
-      filepath: filepath,
+      filepath,
       username,
-
       email,
       password: hashPassword,
 
@@ -153,7 +155,7 @@ const forgottenPassword = async (req, res) => {
     await emailuser.save();
     console.log('with token have the hashing is', emailuser.resetToken);
 
-    const resetPasslink = `${FRONTEND_URI}/${resetToken}`;
+    const resetPasslink = `${FRONTEND_URI}/auth/NewPassword/${resetToken}`;
     //  this is for verification that the user is verified or not after you can interegate a third api
 
     await sendMailUtils(email, 'password reset', `click to verify password:${resetPasslink}`);
