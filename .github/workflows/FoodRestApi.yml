@@ -12,7 +12,7 @@ jobs:
     steps:
       # Step 1: Checkout code
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       # Step 2: Set up Node.js
       - name: Set up Node.js
@@ -25,10 +25,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Step 4: Deploy to Railway
-      - name: Deploy to Railway
+      # Step 4: Install Railway CLI
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      # Step 5: Authenticate Railway
+      - name: Authenticate Railway
         env:
-          RAILWAY_API_TOKEN: ${{secrets.RAILWAY_API_TOKEN}}
-       
-        run: |
-          npx railway up
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+        run: railway login --token $RAILWAY_API_TOKEN
+
+      # Step 6: Deploy to Railway
+      - name: Deploy to Railway
+        run: railway up
