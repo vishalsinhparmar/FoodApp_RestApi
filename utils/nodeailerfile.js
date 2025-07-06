@@ -5,7 +5,7 @@ const sendMailUtils = async(to,subject,text)=>{
         service:'Gmail',
         auth:{
             user:"vishalsinhparmar821@gmail.com",
-            pass:"solr dzul ouvj rwun",
+            pass:"xniw vkbp imkj sgnh",
         },
     });
 
